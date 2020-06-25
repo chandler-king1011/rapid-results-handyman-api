@@ -48,4 +48,16 @@ app.get("/jobs/:id", (req, res) => {
     jobData.getSingleJob(req.params.id, res);
 })
 
+app.post("/jobs", (req, res) => {
+    jobData.postJob(req.body, res);
+})
+
+app.put("/jobs/:id", (req, res) => {
+    jobData.updateJob(req.params.id, req.body, res);
+})
+
+app.delete("/jobs/:id", (req, res) => {
+    jobData.deleteJob(req.params.id, res);
+})
+
 app.listen(port, () => console.log(`Server is running on port ${port}.`));

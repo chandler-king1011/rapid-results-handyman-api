@@ -10,9 +10,9 @@ class Message {
         dbConn.query("SELECT * FROM message",
         (err, results) => {
             if (err) {
-                res.status(404).send("Cannot retrieve data. Please try again later.");
+                res.status(404).send({message: "Cannot retrieve data. Please try again later.", error: err});
             } else {
-                res.status(200).send(results);
+                res.status(200).send({response: results, error: null});
             }
         });
     }
@@ -22,9 +22,9 @@ class Message {
         [id],
         (err, results) => {
             if (err != null) {
-                res.status(404).send("Message could not be found.");
+                res.status(404).send({message: "Message could not be found.", error: err});
             } else if (err == null) {
-                res.status(200).send(results);
+                res.status(200).send({response: results, error: null});
             }
         })
     }
@@ -40,7 +40,7 @@ class Message {
             From: ${jobMsg.name}`
         }
         sgMail.send(msg);
-        res.status(200).send("Your message has been sent!");
+        res.status(200).send({message: "Your message has been sent!", error: null});
     }
 
     postMessage = (jobMsg, res) => {
@@ -54,7 +54,7 @@ class Message {
         [jobMsgInsert],
         (err, results) => {
             if (err != null) {
-                res.status(400).send("An error occurred when trying to post your message. Please try again later.");
+                res.status(400).send({message: "An error occurred when trying to post your message. Please try again later.", error: err});
             } else if (err == null) {
                 this.sendMessage(jobMsg, res);
             }
@@ -66,9 +66,9 @@ class Message {
         [msgId],
         (err, results) => {
             if(err) {
-                res.status(404).send("Message does not exist.");
+                res.status(404).send({message: "Message does not exist.", error: err});
             } else if (err == null) {
-                res.status(200).send("Message has been deleted.");
+                res.status(200).send({message: "Message has been deleted.", error: null});
             }
         })
     }
