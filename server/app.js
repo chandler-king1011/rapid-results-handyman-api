@@ -5,6 +5,8 @@ const mysql = require("mysql");
 const dbConfig = require("./database/database");
 const Message = require("./models/messages");
 const messageData = new Message();
+const Job = require("./models/jobs");
+const jobData = new Job();
 
 const dbConn = mysql.createPool(dbConfig);
 const app = express();
@@ -35,5 +37,15 @@ app.delete("/messages/:id", (req, res) => {
     messageData.deleteMessage(req.params.id, res);
 })
 
+
+// Routes for jobs
+
+app.get("/jobs", (req, res) => {
+    jobData.getAllJobs(res);
+})
+
+app.get("/jobs/:id", (req, res) => {
+    jobData.getSingleJob(req.params.id, res);
+})
 
 app.listen(port, () => console.log(`Server is running on port ${port}.`));
