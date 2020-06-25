@@ -3,6 +3,8 @@ require('dotenv').config();
 const mysql = require("mysql");
 
 const dbConfig = require("./database/database");
+const Message = require("./models/messages");
+const messageData = new Message();
 
 const dbConn = mysql.createPool(dbConfig);
 const app = express();
@@ -18,15 +20,19 @@ app.use((req, res, next) => {
 //Routes for messages
 
 app.get("/messages", (req, res) => {
-    dbConn.query("SELECT * FROM message",
-    (err, results) => {
-        if (err) {
-            res.status(404).send("Cannot retrieve data. Please try again later.");
-        } else {
-            console.log(results);
-            res.status(200).send(results);
-        }
-    })
+    messageData.getAllMessages(res);
+})
+
+app.get("/messages/:id", (req, res) => {
+    messageData.getSingleMessage(req.params.id, res);
+})
+
+app.post("/messages", (req, res) => {
+    messageData.postMessage(req.body, res);
+})
+
+app.delete("/messages/:id", (req, res) => {
+    messageData.deleteMessage(req.params.id, res);
 })
 
 
