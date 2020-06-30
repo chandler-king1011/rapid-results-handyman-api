@@ -56,7 +56,7 @@ app.get("/jobs/:id", (req, res) => {
 });
 
 app.post("/jobs", (req, res) => {
-    jobData.postJob(req.body, res);
+    jobData.postJob(req.body, req.files, res);
 });
 
 app.put("/jobs/:id", (req, res) => {
@@ -64,7 +64,7 @@ app.put("/jobs/:id", (req, res) => {
 });
 
 app.delete("/jobs/:id", (req, res) => {
-    jobData.deleteJob(req.params.id, res);
+    jobData.deleteJobImage(req.params.id, req.body.publicId, res);
 });
 
 // routes for images
