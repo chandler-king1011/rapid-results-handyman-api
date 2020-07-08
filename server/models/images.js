@@ -46,11 +46,12 @@ class Images {
         });
     }
 
-    postImage = (jobId, imgUrl, publicId, res) => {
+    postImage = (jobId, imgUrl, publicId, res, alt) => {
         let imgInsert = {
             image_url: imgUrl,
             image_public: publicId,
-            image_job_id: jobId
+            image_job_id: jobId,
+            image_alt: alt
         };
         dbConn.query("INSERT INTO image SET ?", 
         [imgInsert],
@@ -63,14 +64,13 @@ class Images {
         })
     }
 
-    uploadImage = (files, jobId, res) => {
+    uploadImage = (files, jobId, res, alt) => {
         cloudinary.uploader.upload(files.image.tempFilePath, 
             (error, result) => {
                 if (error) {
                     res.status(400).send({message: "Could not upload image to Cloudinary.", error: error});
                 } else {
-                    console.log(result.public_id);
-                    this.postImage(jobId, result.secure_url, result.public_id, res);
+                    this.postImage(jobId, result.secure_url, result.public_id, res, alt);
                 }
         })
     }

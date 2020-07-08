@@ -82,7 +82,7 @@ app.get("/images/:id", (req, res) => {
 });
 
 app.post("/images", (req, res) => {
-    imageData.uploadImage(req.files, req.body.id, res);
+    imageData.uploadImage(req.files, req.body.id, res, req.body.alt);
 });
 
 app.delete("/images/:public", (req, res) => {
