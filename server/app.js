@@ -10,6 +10,8 @@ const Job = require("./models/jobs");
 const jobData = new Job();
 const Image = require("./models/images");
 const imageData = new Image();
+const Admin = require("./models/admins");
+const adminData = new Admin();
 
 const dbConn = mysql.createPool(dbConfig);
 const app = express();
@@ -87,6 +89,11 @@ app.post("/images", (req, res) => {
 
 app.delete("/images/:public", (req, res) => {
     imageData.deleteImage(req.params.public, res);
+})
+
+// admin routes 
+app.post("/admin/register", (req, res) => {
+     adminData.registerAdmin(req.body, res);
 })
 
 
