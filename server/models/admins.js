@@ -1,6 +1,7 @@
 const mysql = require("mysql");
 const dbConfig = require("../database/database");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const dbConn = mysql.createPool(dbConfig);
 const saltRounds = 10;
@@ -31,11 +32,7 @@ class Admin {
         }
     
 
-    saveToken(email, token) {
-
-    }
-
-    loginUser(body, res) {
+    loginAdmin(body, res) {
         let email = body.email;
         let password = body.password;
 
@@ -44,10 +41,22 @@ class Admin {
         (err, results) => {
             if (err) {
                 res.status(404).send({message: "Invalid email or password.", error: err});
+            } else if (results.length === 0) {
+                res.status(404).send({message: "Invalid email or password.", error: err});
             } else {
                 bcrypt.compare(password, results[0].admin_password, (error, resolve) => {
                     if (resolve === true) {
-                        
+                        let admin = {
+                            id: results[0].admin_id,
+                            firstName: results[0].admin_first_name,
+                            lastName: results[0].admin_last_name,
+                            email: results[0].admin_email
+                        }
+                        let token = jwt.sign(admin, process.env.SECRET_KEY);
+                        res.status(200).send({token, admin});
+                    }
+                    else if (resolve === false) {
+                        res.send({"status": 400, "message": "Invalid Password"});
                     }
                 })
             }

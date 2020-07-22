@@ -13,6 +13,7 @@ const imageData = new Image();
 const Admin = require("./models/admins");
 const adminData = new Admin();
 
+const verify = require("./auth/verifyToken");
 const dbConn = mysql.createPool(dbConfig);
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,11 +31,11 @@ app.use((req, res, next) => {
 
 //Routes for messages
 
-app.get("/messages", (req, res) => {
+app.get("/messages", verify, (req, res) => {
     messageData.getAllMessages(res);
 });
 
-app.get("/messages/:id", (req, res) => {
+app.get("/messages/:id", verify, (req, res) => {
     messageData.getSingleMessage(req.params.id, res);
 });
 
@@ -42,7 +43,7 @@ app.post("/messages", (req, res) => {
     messageData.postMessage(req.body, res);
 });
 
-app.delete("/messages/:id", (req, res) => {
+app.delete("/messages/:id", verify, (req, res) => {
     messageData.deleteMessage(req.params.id, res);
 });
 
@@ -57,15 +58,15 @@ app.get("/jobs/:id", (req, res) => {
     jobData.getSingleJob(req.params.id, res);
 });
 
-app.post("/jobs", (req, res) => {
+app.post("/jobs", verify, (req, res) => {
     jobData.postJob(req.body, req.files, res);
 });
 
-app.put("/jobs/:id", (req, res) => {
+app.put("/jobs/:id", verify, (req, res) => {
     jobData.updateJob(req.params.id, req.body, res);
 });
 
-app.delete("/jobs/:id", (req, res) => {
+app.delete("/jobs/:id", verify, (req, res) => {
     jobData.deleteJobImage(req.params.id, req.body.publicId, res);
 });
 
@@ -83,17 +84,21 @@ app.get("/images/:id", (req, res) => {
     imageData.getSingleImage(req.params.id, res);
 });
 
-app.post("/images", (req, res) => {
+app.post("/images", verify, (req, res) => {
     imageData.uploadImage(req.files, req.body.id, res, req.body.alt);
 });
 
-app.delete("/images/:public", (req, res) => {
+app.delete("/images/:public", verify, (req, res) => {
     imageData.deleteImage(req.params.public, res);
 })
 
 // admin routes 
-app.post("/admin/register", (req, res) => {
+app.post("/admin/register", verify, (req, res) => {
      adminData.registerAdmin(req.body, res);
+});
+
+app.post("/admin/login", (req, res) => {
+    adminData.loginAdmin(req.body, res);
 })
 
 
