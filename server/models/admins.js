@@ -56,7 +56,7 @@ class Admin {
                         res.status(200).send({token, admin});
                     }
                     else if (resolve === false) {
-                        res.send({"status": 400, "message": "Invalid Password"});
+                        res.status(400).send({"message": "Invalid email or password."});
                     }
                 })
             }
