@@ -22,7 +22,7 @@ class Admin {
                          hash], 
                          (err, results) => {
                              if(err) {
-                                 res.status(400).send({message: "Could not register new admin. Make sure you are not using an email you have used in the past.", error: err});
+                                 res.status(401).send({message: "Could not register new admin. Make sure you are not using an email you have used in the past.", error: err});
                              } else {
                                  res.status(201).send({message: "You have successfully registered a new admin. They may now login.", response: results});
                              }
@@ -40,9 +40,9 @@ class Admin {
         [email],
         (err, results) => {
             if (err) {
-                res.status(404).send({message: "Invalid email or password.", error: err});
+                res.status(401).send({message: "Invalid email or password.", error: err});
             } else if (results.length === 0) {
-                res.status(404).send({message: "Invalid email or password.", error: err});
+                res.status(401).send({message: "Invalid email or password.", error: err});
             } else {
                 bcrypt.compare(password, results[0].admin_password, (error, resolve) => {
                     if (resolve === true) {
@@ -56,7 +56,7 @@ class Admin {
                         res.status(200).send({token, admin});
                     }
                     else if (resolve === false) {
-                        res.status(400).send({"message": "Invalid email or password."});
+                        res.status(401).send({"message": "Invalid email or password."});
                     }
                 })
             }
